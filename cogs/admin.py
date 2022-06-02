@@ -34,7 +34,7 @@ class Admin(commands.Cog):
                 self.bot.reload_extension(f"cogs.{cog[:-3]}")
 
     async def cog_check(self, ctx):
-        return ctx.author.is_owner()
+        return await self.bot.is_owner(ctx.author)
 
     async def run_process(self, command):
         try:
@@ -92,12 +92,12 @@ class Admin(commands.Cog):
     async def _reload(self, ctx):
         msg = await ctx.send("reloading")
         for cog in os.listdir("./cogs"):
-            if cog.endswith(".py"):
+            if cog.endswith(".py") and cog != "admin.py":
                 try:
                     self.bot.unload_extension(f"cogs.{cog[:-3]}")
                 except discord.ExtensionError:
                     pass
-                self._load_cogs()
+        self._load_cogs()
         await msg.edit(content="reloaded")
         print("--------------------------------------------------")
 
