@@ -15,10 +15,12 @@ class FileExpander(commands.Cog):
         for attachment in message.attachments:
             if attachment.content_type != "application/pdf":
                 continue
+            msg = await message.channel.send("PDF展開中・・・")
             await attachment.save(f"{message.id}.pdf")
             raw_images = pdf2image.convert_from_path(f"{message.id}.pdf")
             all_images = [raw_images[idx:idx + 10] for idx in range(0,len(raw_images), 10)]
             count = 1
+            await msg.edit(content="画像出力中・・・")
             for image_container in all_images:
                 files = []
                 for image in image_container:
@@ -27,6 +29,7 @@ class FileExpander(commands.Cog):
                     os.remove(f"{message.id}-{count}.jpg")
                     count += 1
                 await message.channel.send(content=f"{count-len(files)}~{count-1}ページ", files=files)
+            await msg.delete()
             os.remove(f"{message.id}.pdf")
 
 
