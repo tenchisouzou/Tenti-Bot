@@ -14,6 +14,7 @@ class Mybot(commands.Bot):
                 everyone=False, roles=True, users=True
             ),
         )
+        self.load_extension("cogs.admin")
 
     async def on_ready(self):
         print("ready")
